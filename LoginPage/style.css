@@ -1,0 +1,238 @@
+body {
+  /* CSS Variables defined on the body */
+  --primary-gradient: linear-gradient(90deg, #ff416c, #ff4b2b);
+  --secondary-gradient: linear-gradient(90deg, #1d2b64, #f8cdda);
+  --background: #121212;
+  --card-bg: #1e1e1e;
+  --input-bg: #272727;
+  --text-light: #ffffff;
+  --text-muted: #b1b1b1;
+  --shadow-dark: rgba(0, 0, 0, 0.75);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--text-light);
+  padding-top: 40px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.chat-root {
+  background: var(--secondary-gradient);
+  color: #000;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 15px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+  transition: transform 0.3s ease-in-out;
+}
+
+.chat-root:hover {
+  transform: scale(1.05);
+}
+
+.login-container {
+  background: var(--card-bg);
+  padding: 50px;
+  width: 90%;
+  max-width: 420px;
+  border-radius: 25px;
+  position: relative;
+  box-shadow: 0 8px 30px var(--shadow-dark);
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  animation: fadeIn 0.8s ease-out;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.login-container::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  z-index: -1;
+  background: var(--primary-gradient);
+  border-radius: 27px;
+}
+
+.logo {
+  width: 60px;
+  align-self: center;
+  animation: fadeInDown 0.8s ease-out;
+}
+
+.login-title {
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 1px;
+  animation: fadeInDown 0.9s ease-out;
+}
+
+.login-form input {
+  padding: 16px;
+  border: none;
+  border-radius: 12px;
+  background: var(--input-bg);
+  color: var(--text-light);
+  font-size: 16px;
+  width: 100%;
+  outline: none;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-form input:focus {
+  background: #3a3f47;
+  box-shadow: 0 0 10px var(--primary-gradient);
+}
+
+.input-group {
+  position: relative;
+}
+
+.toggle-password {
+  background: transparent;
+  border: none;
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  padding: 0;
+}
+
+.toggle-password img {
+  width: 22px;
+  height: 22px;
+  transition: transform 0.3s ease;
+}
+
+.toggle-password img.toggle-animation {
+  transform: rotate(360deg);
+}
+
+.social-login {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: fadeInUp 1s ease-out;
+}
+
+.social-btn {
+  border: none;
+  border-radius: 9999px;
+  padding: 12px;
+  font-weight: 600;
+  color: #fff;
+  transition: all 0.3s ease-in-out;
+  text-align: center;
+}
+
+.google {
+  background: #4285f4;
+}
+
+.apple {
+  background: #333;
+}
+
+.google:hover {
+  background: var(--secondary-gradient);
+  transform: translateY(-2px);
+}
+
+.apple:hover {
+  background: var(--primary-gradient);
+  transform: translateY(-2px);
+}
+
+.submit-btn {
+  padding: 16px;
+  background: var(--primary-gradient);
+  color: #fff;
+  border: none;
+  border-radius: 9999px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.3s, background 0.3s;
+}
+
+.submit-btn:hover {
+  background: #117fc3;
+  transform: scale(1.05);
+}
+
+.forgot-password,
+.signup-link {
+  text-align: center;
+  font-size: 15px;
+  animation: fadeInUp 1.2s ease-out;
+}
+
+.forgot-password a,
+.signup-link a {
+  color: var(--primary-gradient);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.forgot-password a:hover,
+.signup-link a:hover {
+  text-decoration: underline;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    border-radius: 0;
+    min-height: 100vh;
+    justify-content: center;
+    padding: 20px;
+  }
+}

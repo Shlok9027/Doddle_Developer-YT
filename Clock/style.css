@@ -1,0 +1,21 @@
+body {
+    background-color: #212121;
+    color: mistyrose;
+}
+
+.center {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background:  linear-gradient(90deg, #cdc9ec, #2695de);
+}
+
+#clock {
+    font-size: 40px;
+    background: linear-gradient(135deg, #302e74, #c982ab);
+    padding: 100px 20px;
+    margin-top: 50px;
+    border-radius: 50%;
+}

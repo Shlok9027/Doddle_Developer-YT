@@ -1,0 +1,116 @@
+/* APP CONTAINER */
+.app-container {
+  height: 100vh;
+  width: 100vw;
+  transition: background 1s ease, color 1s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* TEXT CONTENT */
+.content {
+  text-align: center;
+  z-index: 1;
+}
+
+.greeting {
+  font-size: 3rem;
+  margin: 0;
+  transition: color 0.3s;
+}
+
+.message {
+  font-size: 1.25rem;
+  margin-top: 10px;
+}
+
+/* DAY THEME */
+.app-container.day {
+  background: linear-gradient(to top, #87cefa, #fefcea);
+  color: #222;
+}
+
+.app-container.day::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 30%, #ffffff99 10%, transparent 50%),
+              radial-gradient(circle at 60% 60%, #ffffff55 10%, transparent 50%);
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* NIGHT THEME */
+.app-container.night {
+  background: radial-gradient(ellipse at top, #1a2a6c 0%, #000 100%);
+  color: #fff;
+}
+
+.app-container.night::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('https://svgshare.com/i/124L.svg') repeat;
+  background-size: 180px;
+  animation: stars 20s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes stars {
+  0%, 100% { transform: translateY(0); opacity: 0.8; }
+  50% { transform: translateY(-10px); opacity: 0.4; }
+}
+
+/* TOGGLE BUTTON */
+.dark-toggle-floating {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50px;
+  padding: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+  /* backdrop-filter: blur(8px); */
+}
+
+.dark-toggle-floating:hover {
+  transform: scale(1.08);
+  cursor: pointer;
+}
+
+.toggle-track {
+  width: 64px;
+  height: 34px;
+  background: rgba(200, 200, 200, 0.3);
+  border-radius: 50px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+.toggle-track.active {
+  background: linear-gradient(to right, #3b82f6, #9333ea);
+}
+
+.toggle-thumb {
+  height: 26px;
+  width: 26px;
+  background: white;
+  border-radius: 50%;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>X Platform Login Clone</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="chat-root">Welcome to X! Chat with us for help anytime.</div>
+    <div class="login-container">
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/5968/5968958.png"
+        alt="X Logo"
+        class="logo"
+      />
+      <div class="login-title">Sign in to X</div>
+      <div class="social-login">
+        <button class="social-btn google">Continue with Google</button>
+        <button class="social-btn apple">Continue with Apple</button>
+      </div>
+      <form class="login-form">
+        <input type="text" placeholder="Phone, email, or username" required />
+        <div class="input-group">
+          <input
+            type="password"
+            placeholder="Password"
+            id="password"
+            required
+          />
+          <button
+            type="button"
+            class="toggle-password"
+            onclick="togglePassword()"
+          >
+            <img id="eye-icon" src="Close_eye.png" alt="Toggle Password" />
+          </button>
+        </div>
+        <button type="submit" class="submit-btn">Log In</button>
+      </form>
+      <div class="forgot-password"><a href="#">Forgot password?</a></div>
+      <div class="signup-link">
+        Don't have an account? <a href="#">Sign up</a>
+      </div>
+    </div>
+    <script>
+      function togglePassword() { const passwordField = document.getElementById("password"); const eyeIcon = document.getElementById("eye-icon");
+       const isPassword = passwordField.getAttribute("type") === "password"; // Toggle password field type
+       passwordField.setAttribute("type", isPassword ? "text" : "password"); // Update icon accordingly
+        eyeIcon.src = isPassword ? "open_eye.png" : "Close_eye.png"; // Add animation class for visual feedback
+        eyeIcon.classList.add("toggle-animation"); setTimeout(() => { eyeIcon.classList.remove("toggle-animation"); }, 300); }
+    </script>
+  </body>
+</html>

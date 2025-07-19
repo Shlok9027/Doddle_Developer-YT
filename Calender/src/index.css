@@ -1,0 +1,98 @@
+body {
+  background: linear-gradient(135deg, #a8b4d7, #b5e7df);
+  color: #fff;
+  font-family: cursive;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+}
+
+
+.calendar-container {
+  width: 350px;
+  height: auto;
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #e2c2c2 30%, #9fc8e4 100%);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1.1rem;
+  color: #2d3436;
+}
+
+.calendar-header button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #1d7fe8;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.calendar-header button:hover {
+  transform: scale(1.2);
+  color: #0056b3;
+}
+
+.calendar-days {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem
+}
+
+.day-name {
+  font-weight: 800;
+  font-size: 1rem;
+  color: #444;
+  width: calc(100% / 7);
+}
+
+.calendar-body {
+  display: flex;
+  flex-wrap: wrap;
+  background: linear-gradient(135deg, rgba(255,255,255,0.6),rgba(255,255,255,0.2));
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+
+.week-row {
+  display: flex;
+  width: 100%;
+}
+
+.date-cell {
+  width: calc(100% / 7);
+  padding: 0.6rem 0;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #333;
+  transition: background 0.3s ease, color 0.3s ease;
+  cursor: pointer;
+
+}
+
+.date-cell.dim {
+  color: #aaa;
+}
+
+.date-cell.current {
+  background: linear-gradient(135deg, #007bff, #4a90e2);
+  color: #fff;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 123,255,0.3);
+  transform: scale(1.2);
+}
+
+.date-cell:hover {
+  background: #f0f8ff;
+  transform: scale(1.1);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}

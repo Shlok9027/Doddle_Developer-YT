@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Cosmic Upload</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+      animation: backgroundColorChange 0.3s infinite;
+    }
+
+    @keyframes backgroundColorChange {
+      0% { background-color: #1f1c5c; }
+      33% { background-color: #ff6ec4; }
+      66% { background-color: #7873f5; }
+      100% { background-color: #1f1c5c; }
+    }
+
+    .upload-box {
+      position: relative;
+      width: 500px;
+      padding: 50px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 40px;
+      box-shadow: 0 25px 50px rgba(255, 105, 180, 0.6);
+      text-align: center;
+    }
+
+    h2, p {
+      color: #ffe7ee;
+      text-shadow: 0 0 10px rgba(255, 105, 180, 0.7);
+    }
+
+    .drop-zone {
+      border: 3px dashed rgba(255, 255, 255, 0.6);
+      border-radius: 20px;
+      padding: 30px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .file-preview {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .file-item {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 12px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    img {
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 2px solid #ff6ec4;
+    }
+
+    .dynamic-circle {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      border: 5px solid transparent;
+      animation: moveCircle 4s linear infinite, circleColorChange 0.5s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes moveCircle {
+      0% {
+        top: 10%;
+        left: 10%;
+        transform: translate(-50%, -50%);
+      }
+      25% {
+        top: 10%;
+        left: 90%;
+        transform: translate(-50%, -50%);
+      }
+      50% {
+        top: 90%;
+        left: 90%;
+        transform: translate(-50%, -50%);
+      }
+      75% {
+        top: 90%;
+        left: 10%;
+        transform: translate(-50%, -50%);
+      }
+      100% {
+        top: 10%;
+        left: 10%;
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    @keyframes circleColorChange {
+      0% { border-color: #ff6ec4; }
+      25% { border-color: #fffa8c; }
+      50% { border-color: #7873f5; }
+      75% { border-color: #1f1c5c; }
+      100% { border-color: #ff6ec4; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="dynamic-circle"></div> <!-- Moving dynamic circle -->
+
+  <div class="upload-box">
+    <h2>Cosmic Upload Portal</h2>
+    <p>Beam your files into space!</p>
+    <div class="drop-zone" id="dropZone">
+      <input type="file" id="fileInput" multiple hidden />
+      <strong style="color:#fff;">🌌 Click or Drag to Upload</strong>
+    </div>
+    <div class="file-preview" id="preview"></div>
+  </div>
+
+  <script>
+    const dropZone = document.getElementById("dropZone");
+    const fileInput = document.getElementById("fileInput");
+    const preview = document.getElementById("preview");
+
+    dropZone.addEventListener("click", () => fileInput.click());
+
+    dropZone.addEventListener("dragover", e => {
+      e.preventDefault();
+      dropZone.classList.add("dragover");
+    });
+
+    dropZone.addEventListener("dragleave", () => dropZone.classList.remove("dragover"));
+    dropZone.addEventListener("drop", e => {
+      e.preventDefault();
+      dropZone.classList.remove("dragover");
+      handleFiles(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener("change", () => handleFiles(fileInput.files));
+
+    function handleFiles(files) {
+      [...files].forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          const div = document.createElement("div");
+          div.className = "file-item";
+          const img = document.createElement("img");
+          img.src = file.type.startsWith("image/") ? e.target.result : "https://cdn-icons-png.flaticon.com/512/564/564619.png";
+          const span = document.createElement("span");
+          span.textContent = file.name;
+          div.appendChild(img);
+          div.appendChild(span);
+          preview.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  </script>
+
+</body>
+</html>

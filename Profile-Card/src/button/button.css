@@ -1,0 +1,10 @@
+.button {
+    background-color: rgba(124, 192, 222, 0.729);
+    color: lavenderblush;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    margin-top: 50px;
+    margin-left: 50%;
+}

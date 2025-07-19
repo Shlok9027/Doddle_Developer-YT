@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Sonic Moon - Single File</title>
+    <style>
+        /* CSS starts here */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: radial-gradient(ellipse at bottom, #0d1a26 0%, #000000 100%); /* Deeper space background */
+            overflow: hidden;
+            perspective: 1000px; /* For 3D transforms */
+            cursor: grab; /* Indicate interactivity */
+            user-select: none; /* Prevent text selection during interaction */
+        }
+
+        body.grabbing {
+            cursor: grabbing;
+        }
+
+        /* Star Field */
+        .star-field {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -2;
+        }
+
+        .stars, .stars2, .stars3 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            animation: animateStars 100s linear infinite; /* Slower, subtle movement */
+        }
+
+        .stars {
+            background: transparent url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="3" height="3"><rect width="1" height="1" x="0" y="0" fill="%23fff"/><rect width="1" height="1" x="2" y="1" fill="%23fff"/><rect width="1" height="1" x="1" y="2" fill="%23fff"/></svg>') repeat;
+            background-size: 3px 3px; /* Small, sparse stars */
+        }
+
+        .stars2 {
+            background: transparent url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="5" height="5"><circle cx="2.5" cy="2.5" r="1" fill="%23ccc"/></svg>') repeat;
+            background-size: 5px 5px; /* Slightly larger stars */
+            animation-delay: -10s;
+            animation-duration: 120s;
+        }
+
+        .stars3 {
+            background: transparent url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="7" height="7"><circle cx="3.5" cy="3.5" r="1.5" fill="%23aaa"/></svg>') repeat;
+            background-size: 7px 7px; /* Largest, few stars */
+            animation-delay: -20s;
+            animation-duration: 150s;
+        }
+
+        @keyframes animateStars {
+            from { transform: translateY(0); }
+            to { transform: translateY(-200%); } /* Creates a slow upward scroll illusion */
+        }
+
+        .container {
+            position: relative;
+            width: 300px; /* Larger container for better interaction */
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d; /* For moon-wrapper 3D rotation */
+        }
+
+        .moon-wrapper {
+            position: relative;
+            width: 250px; /* Main moon size */
+            height: 250px;
+            transform-style: preserve-3d;
+            transition: transform 0.2s ease-out; /* Smooth transition for mouse interaction */
+        }
+
+        .moon {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 40% 40%, #c4c4c4 0%, #888 70%, #666 100%); /* Realistic moon surface texture */
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.5), /* Inner shadow for depth */
+                        0 0 60px rgba(255,255,255,0.2), /* Soft general glow */
+                        0 0 120px rgba(255,255,255,0.05); /* Wider, fainter glow */
+            transform-style: preserve-3d;
+            overflow: hidden; /* To contain craters */
+        }
+
+        /* Craters - simple, subtle depressions */
+        .crater {
+            position: absolute;
+            background: rgba(0,0,0,0.3); /* Darker than moon surface */
+            border-radius: 50%;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5), inset -1px -1px 3px rgba(255,255,255,0.05);
+        }
+
+        .crater1 {
+            width: 30%;
+            height: 30%;
+            top: 15%;
+            left: 20%;
+            transform: translateZ(5px); /* Lift slightly for 3D effect */
+        }
+
+        .crater2 {
+            width: 20%;
+            height: 20%;
+            top: 50%;
+            left: 60%;
+            transform: translateZ(3px);
+        }
+
+        .crater3 {
+            width: 15%;
+            height: 15%;
+            top: 70%;
+            left: 30%;
+            transform: translateZ(2px);
+        }
+
+        /* Inner Glow - for a more intense, contained light */
+        .glow-inner {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.1) 70%, transparent 100%);
+            filter: blur(15px);
+            opacity: 0; /* Initially hidden, controlled by JS */
+            transition: opacity 0.3s ease-out;
+        }
+
+        /* Outer Glow/Atmosphere - for a softer, wider halo */
+        .glow-outer {
+            content: '';
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 70%);
+            filter: blur(40px);
+            opacity: 0.8; /* Always visible to some extent */
+            animation: moon-pulse-glow 6s ease-in-out infinite alternate;
+            z-index: -1; /* Behind the main moon */
+        }
+
+        @keyframes moon-pulse-glow {
+            0% {
+                transform: scale(0.95);
+                opacity: 0.6;
+                box-shadow: 0 0 80px #fff, 0 0 160px rgba(255,255,255,0.3);
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+                box-shadow: 0 0 100px #fff, 0 0 200px rgba(255,255,255,0.5);
+            }
+            100% {
+                transform: scale(0.95);
+                opacity: 0.6;
+                box-shadow: 0 0 80px #fff, 0 0 160px rgba(255,255,255,0.3);
+            }
+        }
+
+        /* Moon movement animation (subtle orbit/drift) */
+        @keyframes moon-drift {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(10px, -5px); }
+            50% { transform: translate(0, 0); }
+            75% { transform: translate(-10px, 5px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        .moon-wrapper {
+            animation: moon-drift 20s ease-in-out infinite; /* Apply subtle drift */
+        }
+
+        /* Active states for interaction */
+        .moon-wrapper.active .glow-inner {
+            opacity: 1; /* Show inner glow on hover/click */
+        }
+
+        .moon-wrapper.active .moon {
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.5),
+                        0 0 80px rgba(255,255,255,0.5), /* Brighter glow */
+                        0 0 180px rgba(255,255,255,0.2),
+                        0 0 300px rgba(255,255,255,0.1);
+        }
+
+        /* Click/Pulse Effect */
+        .moon-wrapper.pulse .moon {
+            animation: pulseEffect 0.5s ease-out forwards;
+        }
+
+        @keyframes pulseEffect {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); filter: brightness(1.5); }
+            100% { transform: scale(1); filter: brightness(1); }
+        }
+        /* CSS ends here */
+    </style>
+</head>
+<body>
+    <div class="star-field">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+        <div class="stars3"></div>
+    </div>
+
+    <div class="container">
+        <div class="moon-wrapper">
+            <div class="moon">
+                <div class="crater crater1"></div>
+                <div class="crater crater2"></div>
+                <div class="crater crater3"></div>
+                <div class="glow-inner"></div>
+                <div class="glow-outer"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* JavaScript starts here */
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.body;
+            const moonWrapper = document.querySelector('.moon-wrapper');
+            const moon = document.querySelector('.moon'); // Needed if you want to dynamically adjust its style later
+            const container = document.querySelector('.container'); // Get the container for mouse position relative to it
+
+            const maxRotation = 15; // Max rotation in degrees
+            const maxTranslate = 10; // Max translation in pixels
+
+            // Mouse movement interaction
+            container.addEventListener('mousemove', (e) => {
+                // Get mouse position relative to the container
+                const rect = container.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
+
+                // Calculate normalized positions (-1 to 1)
+                // We use (width/2) and (height/2) to get a range from -1 to 1
+                const normalizedX = (mouseX - centerX) / (rect.width / 2);
+                const normalizedY = (mouseY - centerY) / (rect.height / 2);
+
+                // Calculate rotation for parallax effect
+                // Invert Y rotation to make it feel like you're looking *around* the moon
+                const rotateY = -normalizedX * maxRotation;
+                const rotateX = normalizedY * maxRotation; // Positive Y mouse movement should rotate X-axis positively (down)
+
+                // Calculate translation for subtle movement
+                const translateX = normalizedX * maxTranslate;
+                const translateY = normalizedY * maxTranslate;
+
+                moonWrapper.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translate(${translateX}px, ${translateY}px)`;
+            });
+
+            container.addEventListener('mouseenter', () => {
+                moonWrapper.classList.add('active');
+                body.classList.add('grabbing');
+            });
+
+            container.addEventListener('mouseleave', () => {
+                moonWrapper.classList.remove('active');
+                body.classList.remove('grabbing');
+                // Reset moon position smoothly
+                moonWrapper.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translate(0px, 0px)`;
+            });
+
+            // Click interaction for a "pulse" effect
+            moonWrapper.addEventListener('click', () => {
+                moonWrapper.classList.add('pulse');
+                // Remove class after animation to allow it to be re-triggered
+                moonWrapper.addEventListener('animationend', () => {
+                    moonWrapper.classList.remove('pulse');
+                }, { once: true });
+            });
+        });
+        /* JavaScript ends here */
+    </script>
+</body>
+</html>

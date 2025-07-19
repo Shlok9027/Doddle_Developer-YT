@@ -1,0 +1,113 @@
+/* General Styles */
+body {
+  font-family: 'Playfair Display', serif; /* Stylish serif font for a luxurious feel */
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #f4edea, #ddd5c3); /* Soft neutral gradient for a classy look */
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header {
+  padding: 1rem;
+  background: linear-gradient(90deg, #b8860b, #decf8f); /* Gold gradient for premium aesthetics */
+  font-size: 1.5rem;
+  color: #ffffff;
+  text-transform: uppercase;
+  /* letter-spacing: 2px; */
+  text-align: center;
+  width: 100%;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); /* Dramatic shadow for depth */
+  border-radius: 0 0 20px 20px;
+}
+
+.main-content {
+  width: 80%;
+  max-width: 700px;
+  margin: 2rem auto;
+  background: #f8f5f2;
+  padding: 1.5rem;
+  border-radius: 20px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Slight elevation */
+}
+
+.cart {
+  padding: 1.5rem;
+  border-radius: 10px;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #f4edea, #ddd5c3); /* Neutral gradient for subtle elegance */
+  border-radius: 15px;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.4s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.cart-item:hover {
+  transform: scale(1.05) translateY(-5px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3); /* Hover effect for lift and prominence */
+}
+
+.cart-item h3 {
+  margin: 0;
+  color: #c49b63; /* Warm gold for item titles */
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.cart-item p {
+  margin: 0.5rem 0 0;
+  color: #756956; /* Soft brown for details */
+  font-size: 1rem;
+}
+
+.controls button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  background: linear-gradient(90deg, #8a6d3b, #b88950); /* Luxurious gold for buttons */
+  color: #fff;
+}
+
+.controls button:hover {
+  background: linear-gradient(90deg, #5a4530, #876042); /* Richer shade on hover */
+  transform: scale(1.1);
+}
+
+.remove-btn {
+  background: linear-gradient(90deg, #6d2e2e, #b35454); /* Sophisticated red gradient for remove button */
+}
+
+.remove-btn:hover {
+  background: linear-gradient(90deg, #512121, #944242); /* Warmer shade on hover */
+}
+
+.empty-cart {
+  font-size: 1.5rem;
+  color: #c49b63; /* Gold tone for empty cart message */
+  font-weight: bold;
+  text-transform: capitalize;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.total {
+  padding: 1.2rem;
+  background: linear-gradient(135deg, #decf8f, #b8860b); /* Gold gradient for total section */
+  border-radius: 10px;
+  font-size: 1.5rem;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+  margin-top: 1rem;
+}

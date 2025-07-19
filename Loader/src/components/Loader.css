@@ -1,0 +1,135 @@
+/* GoosebumpLoader.css */
+
+.loader-scene {
+  height: 100vh;
+  width: 100vw;
+  background: radial-gradient(ellipse at center, #0a0a0a 0%, #000000 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Stars background effect */
+.loader-scene::before {
+  content: "";
+  position: absolute;
+  width: 300%;
+  height: 300%;
+  background: url("https://www.transparenttextures.com/patterns/stardust.png");
+  opacity: 0.03;
+  animation: stars 60s linear infinite;
+}
+
+@keyframes stars {
+  from { transform: translate(0, 0); }
+  to { transform: translate(-200px, -300px); }
+}
+
+/* Loader animation */
+.goosebump-loader {
+  width: 160px;
+  height: 160px;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: loaderFloat 3s ease-in-out infinite;
+}
+
+@keyframes loaderFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Glowing Core */
+.core-glow {
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle, #fff, #0ff, #0ff0);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow:
+    0 0 30px #00fff0,
+    0 0 60px #00ff8c,
+    0 0 90px #ff00f7;
+  animation: pulse 2s ease-in-out infinite, colorCycle 6s ease-in-out infinite;
+}
+
+/* Orbiting rings */
+.ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  animation: spinZ 6s linear infinite;
+}
+
+.ring1 {
+  border-top: 3px solid #00fff0;
+  animation: spinX 4s linear infinite;
+}
+.ring2 {
+  border-left: 3px solid #00ff8c;
+  animation: spinY 5s linear infinite;
+}
+.ring3 {
+  border-bottom: 3px solid #ff00f7;
+  animation: spinZ 3s linear infinite reverse;
+}
+
+@keyframes spinX {
+  0% { transform: rotateX(0); }
+  100% { transform: rotateX(360deg); }
+}
+@keyframes spinY {
+  0% { transform: rotateY(0); }
+  100% { transform: rotateY(360deg); }
+}
+@keyframes spinZ {
+  0% { transform: rotateZ(0); }
+  100% { transform: rotateZ(360deg); }
+}
+
+/* Core Glow Animations */
+@keyframes pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.2); }
+}
+@keyframes colorCycle {
+  0% {
+    box-shadow: 0 0 20px #00fff0, 0 0 40px #00ff8c, 0 0 60px #ff00f7;
+  }
+  50% {
+    box-shadow: 0 0 40px #ff00f7, 0 0 60px #00ff8c, 0 0 80px #00fff0;
+  }
+  100% {
+    box-shadow: 0 0 20px #00fff0, 0 0 40px #00ff8c, 0 0 60px #ff00f7;
+  }
+}
+
+/* Typing Loading Text */
+.loader-text {
+  margin-top: 40px;
+  color: #ffffffcc;
+  font-size: 1.4rem;
+  font-weight: bold;
+  font-family: 'Courier New', Courier, monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 2px solid #00fff0;
+  width: 0;
+  animation: typing 4s steps(10) infinite alternate, blink 0.8s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 10ch }
+}
+@keyframes blink {
+  50% { border-color: transparent; }
+}

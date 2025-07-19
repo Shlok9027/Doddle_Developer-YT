@@ -1,0 +1,63 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #000;
+    overflow: hidden; /* Added to prevent scrollbars if the moon moves off-screen */
+}
+
+.moon {
+    position: relative;
+    height: 200px;
+    width: 200px;
+    background: #000; /* This will be overridden by the animation for the "moon" part */
+    border-radius: 50%; /* Changed from 'border: 50%;' for correct circle shape */
+    animation: moon-bg 5s linear infinite alternate; /* Removed 0.1s delay, often not needed for continuous loops */
+}
+
+@keyframes moon-bg {
+    0%,
+    20% {
+        background: #000;
+    }
+    50% {
+        background: #fff;
+    }
+    80%,
+    100% {
+        background: #000;
+    }
+}
+
+.moon:after {
+    content: '';
+    position: absolute;
+    background: #fff;
+    height: 100%;
+    width: 100%;
+    display: block;
+    border-radius: 50%;
+    z-index: -1; /* Ensures the light is behind the "moon" element itself */
+    animation: moon-light 5s linear infinite alternate; /* Removed 0.2s delay */
+}
+
+@keyframes moon-light {
+    0% {
+        transform: translateX(25px) scale(1.02); /* Corrected from translate(25px) */
+        box-shadow: none;
+    }
+    50% {
+        transform: translate(0px, 0px) scale(1.02); /* Corrected syntax for translate and removed extra parenthesis */
+        box-shadow: 0px 0px 40px #fff, 0px 0px 80px 2px #fff;
+    }
+    100% {
+        transform: translateX(-25px) scale(0.9); /* Corrected '25pc' to '25px' and '0.9s' to '0.9' */
+    }
+}
