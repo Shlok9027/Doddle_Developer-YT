@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Ultra Interactive Super Sonic 3D Flip Card Gallery</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* BODY & BACKGROUND */
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: linear-gradient(
+          135deg,
+          #100027 0%,
+          #00ffd6 68%,
+          #fcbe26 100%
+        );
+        background-size: 1400% 1400%;
+        animation: bgPulse 28s ease-in-out infinite alternate;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: "Rajdhani", "Orbitron", sans-serif;
+        overflow-x: hidden;
+      }
+      @keyframes bgPulse {
+        0% {
+          background-position: 0% 15%;
+        }
+        50% {
+          background-position: 100% 90%;
+        }
+        100% {
+          background-position: 0% 15%;
+        }
+      }
+
+      /* TITLE */
+      .gallery-title {
+        font-family: "Orbitron", "Rajdhani", monospace;
+        color: #fff;
+        font-size: 2.9rem;
+        letter-spacing: 0.14em;
+        text-shadow: 0 0 28px #00ffd6b8, 0 3px 28px #ffd640b7;
+        margin: 36px 0 22px 0;
+        font-weight: 900;
+        text-align: center;
+        filter: drop-shadow(0 0 8px #00ffd6c7);
+        user-select: none;
+        cursor: default;
+      }
+
+      /* CARD GRID */
+      .card-grid {
+        max-width: 1080px;
+        width: 92vw;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
+        gap: 2.7rem;
+        padding: 38px 3vw 70px 3vw;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* FLIP CARD */
+      .flip-card {
+        perspective: 1400px;
+        width: 225px;
+        height: 320px;
+        border-radius: 24px;
+        position: relative;
+        outline: none;
+        cursor: pointer;
+        transition: box-shadow 0.3s ease;
+        user-select: none;
+      }
+      .flip-card:focus-visible {
+        outline: 3px solid #00ffd6;
+        outline-offset: 6px;
+        box-shadow: 0 0 76px 16px #00ffd6cc, 0 0 150px 45px #ffc600cc;
+        z-index: 4;
+      }
+      .flip-card:hover {
+        box-shadow: 0 0 38px 12px #1fd7d099, 0 0 76px 20px #fcbe2690,
+          0 0 44px 11px #fff6;
+        z-index: 3;
+      }
+
+      /* FLIP INNER */
+      .flip-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border-radius: 24px;
+        transform-style: preserve-3d;
+        transition: transform 0.69s cubic-bezier(0.42, 1.65, 0.42, 1.05),
+          filter 0.25s ease, box-shadow 0.18s ease;
+        box-shadow: 0 0 22px #ffc60045, 0 0 37px #00ffd661 inset;
+        overflow: visible;
+        will-change: transform, filter;
+      }
+      .flip-card:hover .flip-inner,
+      .flip-card:focus .flip-inner {
+        transform: rotateY(180deg) scale(1.05) skewY(1.4deg);
+        filter: brightness(1.17) saturate(1.2) blur(0.13px) contrast(1.1);
+        box-shadow: 0 0 55px 22px #ffc600a1, 0 0 90px 35px #00ffd699 inset;
+      }
+
+      /* FLIP FACE BASE */
+      .flip-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 24px;
+        backface-visibility: hidden;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+        box-shadow: 0 0 14px #00ffd631 inset;
+        color: white;
+        text-align: center;
+      }
+
+      /* FRONT */
+      .card-front {
+        background: linear-gradient(145deg, #280045 55%, #00ffd6cd 98%);
+        border: 3px solid #00ffd6a6;
+        box-shadow: 0 0 30px #00ffd640, 0 0 68px #fcbe2680;
+        z-index: 2;
+        position: relative;
+      }
+      .card-front::after {
+        content: "";
+        position: absolute;
+        pointer-events: none;
+        top: -10px;
+        left: -12px;
+        right: -12px;
+        bottom: -10px;
+        border-radius: 30px;
+        border: 3px solid transparent;
+        background: linear-gradient(140deg, #ffd600, #00ffd6 60%, #ab11ff 100%);
+        background-size: 210% 210%;
+        filter: blur(10px);
+        array-opacity: 0.55;
+        animation: borderPulse 10s linear infinite;
+        z-index: 1;
+      }
+      @keyframes borderPulse {
+        0% {
+          background-position: 0% 0%;
+        }
+        100% {
+          background-position: 102% 82%;
+        }
+      }
+
+      .front-content {
+        z-index: 2;
+        margin-top: 14px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        justify-content: center;
+        align-items: center;
+        filter: saturate(1.3) brightness(1.2);
+      }
+      .badge-symbol {
+        font-size: 3.8rem;
+        color: #fcbe26;
+        text-shadow: 0 0 22px #ffd600cc, 0 0 80px #00ffd680;
+        font-family: "Bungee", "Monoton", "Orbitron", sans-serif;
+        letter-spacing: 0.07em;
+        line-height: 1;
+        animation: symbolPulse 3.4s infinite alternate;
+        filter: drop-shadow(0 0 9px #00ffd6aa);
+      }
+      @keyframes symbolPulse {
+        0% {
+          text-shadow: 0 0 9px #ffd60063;
+        }
+        100% {
+          text-shadow: 0 0 36px #00ffd6cc;
+        }
+      }
+      .badge-title {
+        font-size: 1.18rem;
+        font-family: "Monoton", "Rajdhani", "Orbitron", cursive;
+        letter-spacing: 0.21em;
+        background: linear-gradient(90deg, #00ffd6, #fcbe26 86%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        font-weight: 700;
+        text-shadow: 0 0 24px #00ffd6a6, 0 2px 21px #ffc602a3;
+        filter: brightness(1.2);
+        margin-bottom: 16px;
+      }
+      .badge-wave {
+        width: 96px;
+        height: 18px;
+        margin-bottom: 22px;
+        margin-top: 4px;
+        overflow: visible;
+        filter: drop-shadow(0 0 9px #00ffd6aa);
+      }
+      .badge-wave svg {
+        width: 100%;
+        stroke: #00ffd6bb;
+        stroke-linecap: round;
+        filter: blur(1.5px) drop-shadow(0 0 10px #00ffd6cc);
+        animation: waveMove 4s ease-in-out infinite alternate;
+      }
+      @keyframes waveMove {
+        from {
+          transform: translateX(-11px);
+        }
+        to {
+          transform: translateX(11px);
+        }
+      }
+      .cy-bar {
+        width: 78px;
+        height: 7px;
+        margin-top: 7px;
+        border-radius: 7px;
+        background: linear-gradient(90deg, #fcbe26 25%, #00ffd6 85%);
+        filter: blur(1.4px) brightness(1.13);
+        animation: shineBar 2.7s linear infinite alternate;
+        transition: filter 0.32s;
+      }
+      @keyframes shineBar {
+        0% {
+          background-position: 0% 55%;
+        }
+        100% {
+          background-position: 100% 70%;
+        }
+      }
+
+      /* BACK */
+      .card-back {
+        background: linear-gradient(
+          90deg,
+          #00ffd6 27%,
+          #21007b 72%,
+          #fcbe26 96%
+        );
+        box-shadow: 0 0 39px 8px #00ffd654, 0 0 95px #21007b88,
+          0 0 72px #ffd60087;
+        border: 2.9px solid #fcbe269d;
+        transform: rotateY(180deg);
+        padding: 24px 20px;
+        font-family: "Rajdhani", monospace;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        align-items: flex-start;
+        justify-content: center;
+        overflow-y: auto;
+        gap: 15px;
+      }
+      .card-back-content {
+        opacity: 0;
+        transform: translateY(25px) scale(0.82);
+        animation: backContentIn 0.67s cubic-bezier(0.33, 1.3, 0.52, 0.92)
+          forwards;
+        animation-delay: 0.27s;
+        font-size: 1rem;
+        color: #fefefe;
+        text-shadow: 0 0 8px #1fd7d07a;
+        line-height: 1.55;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .flip-card:hover .card-back-content,
+      .flip-card:focus .card-back-content {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        animation: backContentIn 0.5s cubic-bezier(0.33, 1.3, 0.52, 0.92)
+          forwards;
+      }
+      @keyframes backContentIn {
+        0% {
+          opacity: 0;
+          transform: translateY(25px) scale(0.85);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .lang-badge {
+        font-size: 1.03rem;
+        padding: 8px 18px;
+        border-radius: 15px;
+        background: linear-gradient(90deg, #fff 0%, #00ffd6 84%);
+        color: #20186f;
+        box-shadow: 0 0 14px #00ffd622;
+        font-weight: 800;
+        letter-spacing: 0.09em;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        user-select: none;
+        font-family: "Rajdhani", monospace;
+      }
+      .lang-icon {
+        font-size: 1.3em;
+        color: #21007b;
+        filter: drop-shadow(0 0 3px #ffd60096);
+      }
+      .card-info {
+        color: #fff;
+        text-shadow: 0 0 8px #ffd600ae;
+        font-weight: 400;
+        user-select: text;
+        /* smooth wrap for readability */
+        word-wrap: break-word;
+        white-space: pre-line;
+      }
+      .qr-mock {
+        align-self: center;
+        margin-top: auto;
+        width: 55px;
+        height: 55px;
+        background: repeating-linear-gradient(
+          135deg,
+          #fff 0 6px,
+          #000 6px 11px
+        );
+        border-radius: 12px;
+        border: 2.4px solid #00ffd6db;
+        box-shadow: 0 0 13px #00ffd6c1;
+        position: relative;
+        user-select: none;
+      }
+      .qr-mock::after {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 18px;
+        top: 18px;
+        width: 14px;
+        height: 14px;
+        background: #00ffd6;
+        opacity: 0.15;
+        border-radius: 2px;
+      }
+
+      /* Responsive */
+      @media (max-width: 700px) {
+        .gallery-title {
+          font-size: 1.96rem;
+          margin-top: 24px;
+          margin-bottom: 17px;
+        }
+        .card-grid {
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          gap: 1.8rem;
+          max-width: 850px;
+        }
+        .flip-card {
+          width: 180px;
+          height: 265px;
+        }
+        .card-back {
+          padding: 22px 16px;
+        }
+        .badge-symbol {
+          font-size: 3.1rem;
+          margin-top: 14px;
+        }
+        .badge-title {
+          font-size: 1.06rem;
+          margin-bottom: 7px;
+        }
+        .lang-badge {
+          font-size: 0.98rem;
+          padding: 6px 14px;
+          gap: 6px;
+        }
+        .card-info {
+          font-size: 0.88rem;
+        }
+        .qr-mock {
+          width: 43px;
+          height: 43px;
+        }
+      }
+
+      @media (max-width: 460px) {
+        .card-grid {
+          grid-template-columns: 1fr;
+          gap: 1.3rem;
+          width: 94vw;
+        }
+        .flip-card {
+          width: 100%;
+          height: 280px;
+          margin: 0 auto 22px auto;
+        }
+        .gallery-title {
+          font-size: 1.7rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="gallery-title" aria-label="Super Sonic 3D Flip Logo Gallery">
+      Super Sonic 3D Flip Logo Gallery
+    </div>
+    <main class="card-grid">
+      <!-- Card 1 -->
+      <article
+        class="flip-card"
+        tabindex="0"
+        aria-labelledby="js-master-title"
+        role="group"
+      >
+        <div class="flip-inner">
+          <section class="flip-face card-front" aria-hidden="false">
+            <div class="front-content">
+              <h2 class="badge-symbol" aria-hidden="true">&#9889;</h2>
+              <h3 id="js-master-title" class="badge-title">JS Master</h3>
+              <div class="badge-wave" aria-hidden="true">
+                <svg viewBox="0 0 100 18" aria-hidden="true" focusable="false">
+                  <path
+                    d="M0 9 Q25 0 50 9 Q75 18 100 9"
+                    stroke-width="4"
+                    stroke="currentColor"
+                    fill="none"
+                  />
+                </svg>
+              </div>
+              <div class="cy-bar" aria-hidden="true"></div>
+            </div>
+          </section>
+          <section class="flip-face card-back" aria-hidden="true">
+            <div
+              class="card-back-content"
+              role="region"
+              aria-labelledby="features-title-1"
+            >
+              <p id="features-title-1" class="features-title">
+                Features of JS Master Badge
+              </p>
+              <ul class="features-list">
+                <li>Animated neon design for modern web</li>
+                <li>Flips in 3D — smooth, glassy motion</li>
+                <li>Click/hover to reveal advanced info</li>
+                <li>Perfect for portfolios and intros</li>
+                <li>Highlight skills & certifications easily</li>
+                <li>Fully responsive and touch-friendly</li>
+              </ul>
+              <p class="features-title" style="margin-top: 1.7em">
+                What makes this super sonic?
+              </p>
+              <ul class="features-list">
+                <li>Pulse-glow shadow and blended gradients</li>
+                <li>Interactive “star” list accent, rotating color</li>
+                <li>HD glassmorphism with deep shadow for depth</li>
+              </ul>
+            </div>
+          </section>
+        </div>
+      </article>
+
+      <!-- Card 2 -->
+      <article
+        class="flip-card"
+        tabindex="0"
+        aria-labelledby="pythonista-title"
+        role="group"
+      >
+        <div class="flip-inner">
+          <section class="flip-face card-front" aria-hidden="false">
+            <div class="front-content">
+              <h2 class="badge-symbol" aria-hidden="true">&#9733;</h2>
+              <h3 id="pythonista-title" class="badge-title">Pythonista</h3>
+              <div class="badge-wave" aria-hidden="true">
+                <svg viewBox="0 0 100 18" aria-hidden="true" focusable="false">
+                  <path
+                    d="M0 9 Q35 0 70 18 Q85 24 100 9"
+                    stroke-width="4"
+                    stroke="currentColor"
+                    fill="none"
+                  />
+                </svg>
+              </div>
+              <div class="cy-bar" aria-hidden="true"></div>
+            </div>
+          </section>
+          <section class="flip-face card-back" aria-hidden="true">
+            <div
+              class="card-back-content"
+              role="region"
+              aria-labelledby="features-title-2"
+            >
+              <p id="features-title-2" class="features-title">
+                Features of Pythonista Badge
+              </p>
+              <ul class="features-list">
+                <li>Pythonic clean neon visual style</li>
+                <li>Elegant flip with smooth back text reveal</li>
+                <li>Context info perfect for portfolios</li>
+                <li>Glowing gradients for unique flair</li>
+                <li>Supports touch and keyboard users</li>
+              </ul>
+              <p class="features-title" style="margin-top: 1.7em">
+                Super Sonic Highlights
+              </p>
+              <ul class="features-list">
+                <li>Glowing layered color gradients</li>
+                <li>Animated star accents on the back</li>
+                <li>Rich neon shadow with soft glow</li>
+              </ul>
+            </div>
+          </section>
+        </div>
+      </article>
+
+      <!-- Card 3 -->
+      <article
+        class="flip-card"
+        tabindex="0"
+        aria-labelledby="cpp-power-title"
+        role="group"
+      >
+        <div class="flip-inner">
+          <section class="flip-face card-front" aria-hidden="false">
+            <div class="front-content">
+              <h2 class="badge-symbol" aria-hidden="true">&#128187;</h2>
+              <h3 id="cpp-power-title" class="badge-title">C++ Power</h3>
+              <div class="badge-wave" aria-hidden="true">
+                <svg viewBox="0 0 100 18" aria-hidden="true" focusable="false">
+                  <path
+                    d="M0 9 Q40 18 50 0 Q70 3 100 9"
+                    stroke-width="4"
+                    stroke="currentColor"
+                    fill="none"
+                  />
+                </svg>
+              </div>
+              <div class="cy-bar" aria-hidden="true"></div>
+            </div>
+          </section>
+          <section class="flip-face card-back" aria-hidden="true">
+            <div
+              class="card-back-content"
+              role="region"
+              aria-labelledby="features-title-3"
+            >
+              <p id="features-title-3" class="features-title">
+                Features of C++ Power Badge
+              </p>
+              <ul class="features-list">
+                <li>Robust neon-glow panel and flip effect</li>
+                <li>In-depth feature reveal on back side</li>
+                <li>Custom badge styling for C++ coders</li>
+                <li>Neon border with subtle animated wave</li>
+                <li>Keyboard accessible and responsive</li>
+              </ul>
+              <p class="features-title" style="margin-top: 1.7em">
+                Why Super Sonic?
+              </p>
+              <ul class="features-list">
+                <li>Layered glowing shadows and highlights</li>
+                <l>Animated star bullet points for user focus</l>ii
+                <li>Clear, smooth transitions and readability</li>
+              </ul>
+            </div>
+          </section>
+        </div>
+      </article>
+
+      <!-- Card 4 -->
+      <article
+        class="flip-card"
+        tabindex="0"
+        aria-labelledby="react-pro-title"
+        role="group"
+      >
+        <div class="flip-inner">
+          <section class="flip-face card-front" aria-hidden="false">
+            <div class="front-content">
+              <h2 class="badge-symbol" aria-hidden="true">&#129302;</h2>
+              <h3 id="react-pro-title" class="badge-title">React Pro</h3>
+              <div class="badge-wave" aria-hidden="true">
+                <svg viewBox="0 0 100 18" aria-hidden="true" focusable="false">
+                  <path
+                    d="M0 9 Q20 12 40 6 Q60 -2 80 9 Q90 24 100 9"
+                    stroke-width="4"
+                    stroke="currentColor"
+                    fill="none"
+                  />
+                </svg>
+              </div>
+              <div class="cy-bar" aria-hidden="true"></div>
+            </div>
+          </section>
+          <section class="flip-face card-back" aria-hidden="true">
+            <div
+              class="card-back-content"
+              role="region"
+              aria-labelledby="features-title-4"
+            >
+              <p id="features-title-4" class="features-title">
+                Features of React Pro Badge
+              </p>
+              <ul class="features-list">
+                <li>Flips with smooth 3D perspective and glow</li>
+                <li>Detailed back with badge description</li>
+                <li>Clean neon palette and animated wave</li>
+                <li>Great for showcasing UI & JS skills</li>
+              </ul>
+              <p class="features-title" style="margin-top: 1.7em">
+                Super Sonic Benefits
+              </p>
+              <ul class="features-list">
+                <li>Subtle glow cascades and crisp shadows</li>
+                <li>Highly readable and elegant layout</li>
+                <li>Mobile & keyboard friendly interaction</li>
+              </ul>
+            </div>
+          </section>
+        </div>
+      </article>
+    </main>
+
+    <script>
+      // Particle sparks on flip, enhance interactivity
+      const cards = document.querySelectorAll(".flip-card");
+
+      function createSparks(card) {
+        const sparkleCount = 12;
+        // Remove any old spark container to avoid duplicates
+        let oldSparks = card.querySelector(".spark-container");
+        if (oldSparks) oldSparks.remove();
+
+        const sparkContainer = document.createElement("div");
+        sparkContainer.classList.add("spark-container");
+        sparkContainer.style.position = "absolute";
+        sparkContainer.style.top = "50%";
+        sparkContainer.style.left = "50%";
+        sparkContainer.style.width = "180px";
+        sparkContainer.style.height = "80px";
+        sparkContainer.style.pointerEvents = "none";
+        sparkContainer.style.transform = "translate(-50%, -50%)";
+        sparkContainer.style.zIndex = "1000";
+
+        for (let i = 0; i <sript sparkleCount; i++) {
+          const spark = document.createElement("div");
+          spark.classList.add("spark");
+          // Random position inside container
+          const left = 20 + Math.random() * 140;
+          const top = 10 + Math.random() * 50;
+          spark.style.left = `${left}px`;
+          spark.style.top = `${top}px`;
+          spark.style.width = "10px";
+          spark.style.height = "4px";
+          spark.style.borderRadius = "5px";
+          spark.style.background =
+            "linear-gradient(90deg, #ffd600 0%, #00ffd6 85%)";
+          spark.style.boxShadow = "0 0 9px #ffd600a5, 0 2px 10px #00ffd6bd";
+          spark.style.opacity = 0.8;
+          spark.style.position = "absolute";
+          spark.style.filter = "blur(1px)";
+          spark.style.animation = `sparkAnim 1.4s linear ${
+            Math.random() * 0.8
+          }s infinite alternate`;
+          sparkContainer.appendChild(spark);
+        }
+        card.appendChild(sparkContainer);
+      }
+
+      function removeSparks(card) {
+        let oldSparks = card.querySelector(".spark-container");
+        if (oldSparks) oldSparks.remove();
+      }
+
+      cards.forEach((card) => {
+        card.addEventListener("mouseenter", () => {
+          createSparks(card);
+        });
+        card.addEventListener("mouseleave", () => {
+          removeSparks(card);
+        });
+        card.addEventListener("focus", () => {
+          createSparks(card);
+        });
+        card.addEventListener("blur", () => {
+          removeSparks(card);
+        });
+      });
+    </sript>
+
+    <style>
+      /* Spark animation for flashes */
+      @keyframes sparkAnim {
+        0% {
+          opacity: 0.4;
+          transform: scale(0.7) rotate(0deg);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1.1) rotate(40deg);
+        }
+      }
+    </style>
+  </body>
+</html>
