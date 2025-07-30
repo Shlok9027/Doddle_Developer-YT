@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sonic HyperLinks</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <!-- Bungee for bold, arcade-like headline, and Montserrat for clarity -->
+  <link href="https://fonts.googleapis.com/css2?family=Bungee:wght@400;800&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0d1631 10%, #2a0151 60%, #28ecff 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+    /* Animated gradient border splash */
+    body:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background: conic-gradient(from 230deg at 50% 70%, #b8f7ff33 22deg, #ffe36366 150deg, #f45fff99 330deg, #00ffe4bb 360deg);
+      filter: blur(55px);
+      opacity: .65;
+      animation: borderSplash 5.8s linear infinite reverse;
+    }
+    @keyframes borderSplash {
+      to { transform: rotate(1turn);}
+    }
+    /* ---- New Hyper Title! ---- */
+    h1 {
+      font-family: 'Bungee', cursive, sans-serif;
+      font-size: 2.9rem;
+      letter-spacing: .05em;
+      margin-bottom: 2.6rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #46fff9 20%, #fd62f9 50%, #fcd23b 90%);
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-stroke: 2.2px #0ff;
+      filter: drop-shadow(0 0 24px #46fff9aa)
+              drop-shadow(0 0 7px #ff7af9cc)
+              drop-shadow(0 2px 12px #fff7);
+      text-align: center;
+      text-shadow: 0 3px 30px #ffeec0, 0 0 16px #3cfefa;
+      animation: titlePulse 2.7s infinite alternate cubic-bezier(.68,1.3,.5,.97);
+      text-transform: uppercase;
+    }
+    @keyframes titlePulse {
+      from { filter: drop-shadow(0 0 20px #78f9ff) drop-shadow(0 0 9px #ff8aff) }
+      60%  { filter: drop-shadow(0 0 40px #fdfdaf) drop-shadow(0 0 36px #fd28ffcc);}
+      to   { filter: drop-shadow(0 0 10px #ffaaff) drop-shadow(0 0 3px #00fff799);}
+    }
+
+    .social-container {
+      display: flex;
+      gap: 2.6rem;
+      z-index: 1;
+      position: relative;
+    }
+    .logo-card {
+      width: 104px;
+      height: 104px;
+      background: rgba(28, 42, 79, 0.18);
+      background-image: linear-gradient(120deg, #5effff0c 30%, #493cff12 100%);
+      box-shadow:
+        0 12px 38px #00ffd422,
+        0 4px 28px #2d006aad,
+        0 0 32px #ff8dff10 inset;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+      transition:
+        transform 0.37s cubic-bezier(.49,1.19,.5,1.18),
+        box-shadow 0.35s cubic-bezier(.23,1.19,.5,1.21),
+        background 0.21s,
+        border 0.19s;
+      border: 2.1px solid rgba(138, 255, 252, 0.13);
+      overflow: visible;
+      z-index: 1;
+      /* Sonic pulse wave */
+      animation: neonGlow 3.5s linear infinite alternate;
+    }
+    @keyframes neonGlow {
+      0%   { box-shadow: 0 10px 50px #47fef533,0 4px 24px #3decff50,0 0 0px #ff8dff00;}
+      40%  { box-shadow: 0 12px 75px #fdf45233,0 8px 42px #932cff60,0 0 16px #fa36ff80;}
+      70%  { box-shadow: 0 18px 120px #ffccf740,0 10px 64px #23c6fa90,0 0 42px #ffe83666;}
+      100% { box-shadow: 0 11px 60px #3decff77,0 8px 24px #ff8dff44,0 0 22px #fdfdfd40;}
+    }
+
+    /* --- ELEVATED HOVER EFFECTS --- */
+    .logo-card:before {
+      content: "";
+      position: absolute; inset: -12px;
+      border-radius: 40px;
+      z-index: -2;
+      filter: blur(14px);
+      opacity: 0;
+      transition: opacity 0.22s, box-shadow 0.18s;
+    }
+    .twitter:hover:before {
+      background: radial-gradient(ellipse at 54% 63%, #1da1f2 60%, #00fff2 90%, transparent 100%);
+      opacity: 0.48;
+    }
+    .github:hover:before {
+      background: radial-gradient(circle at 47% 62%, #fff 34%, #6575ff 80%, transparent 96%);
+      opacity: 0.37;
+    }
+    .linkedin:hover:before {
+      background: radial-gradient(circle at 51% 60%, #0a66c2 72%, #00fac2 99%, transparent 100%);
+      opacity: 0.43;
+    }
+    .instagram:hover:before {
+      background: radial-gradient(circle at 56% 56%, #fee140 24%,#fa00ff 88%,#4f5bd5 99%, transparent 100%);
+      opacity: 0.58;
+    }
+
+    .logo-card:hover {
+      transform: scale(1.18) translateY(-16px) rotate(-4deg);
+      box-shadow:
+        0 0 0 3px #fff3,
+        0 0 72px #fdf250,
+        0 18px 48px #9777ffbb;
+      border: 2.7px solid #47fef3;
+      background: linear-gradient(130deg, #bdffe3 14%,#f8f5fe11 60%);
+      animation: logoPulse 0.45s;
+    }
+    @keyframes logoPulse {
+      60% { filter: drop-shadow(0 0 40px #ffeab6) drop-shadow(0 0 38px #ff36dd);}
+      100% { filter: none;}
+    }
+
+    .logo-card:after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 15px;
+      width: 54%;
+      height: 4.6px;
+      border-radius: 2px;
+      transform: translateX(-50%) scaleX(0);
+      background: linear-gradient(90deg, #fafffd, #00fff2 21%, #5f38ff 65%, #fcd867 90%);
+      transition: transform 0.41s cubic-bezier(.28,1.08,.39,.97);
+      z-index: 2;
+      opacity: 0.92;
+      filter: blur(.5px);
+    }
+    .logo-card:hover:after { transform: translateX(-50%) scaleX(1.1);}
+    svg {
+      width: 63px; height: 63px;
+      display: block;
+      pointer-events: none;
+      /* Animate icon in on hover */
+      transition: filter 0.19s cubic-bezier(.51,1.02,.64,.99),transform 0.12s;
+      filter: drop-shadow(0 2px 9px #c8fafd44);
+    }
+    .logo-card:hover svg {
+      filter: drop-shadow(0 0 22px #47fef3ee) drop-shadow(0 0 18px #ffe140bb);
+      transform: scale(1.09) rotate(-3deg);
+    }
+
+    .logo-card .logo-bg-circ {
+      stroke-width: 0.5;
+      stroke: #fff6;
+      filter: drop-shadow(0 0 3.5px #68ffef88);
+    }
+    /* --- NEON CLICK RIPPLE --- */
+    .ripple-efx {
+      position: absolute;
+      border-radius: 50%;
+      background-image: radial-gradient(circle, #00ecff 38%, #ffd1ff 73%, #fff0 100%);
+      width: 63px; height: 63px;
+      pointer-events: none;
+      animation: rippleFade 0.55s forwards;
+      opacity: 0.46;
+      z-index: 14;
+      left: 0;
+      top: 0;
+    }
+    @keyframes rippleFade {
+      to { opacity: 0; transform: scale(2.35);}
+    }
+    @media (max-width: 650px) {
+      .social-container { gap: 1.15rem;}
+      .logo-card { width: 73px; height: 73px;}
+      svg,.ripple-efx { width: 37px; height: 37px;}
+    }
+  </style>
+</head>
+<body>
+  <h1>Sonic HyperLinks</h1>
+  <div class="social-container">
+    <div class="logo-card twitter" title="Twitter">
+      <svg viewBox="0 0 64 64" fill="none">
+        <circle class="logo-bg-circ" fill="#1da1f2" cx="32" cy="32" r="28"/>
+        <path d="M47.2 22a12 12 0 0 1-3.41.93A5.96 5.96 0 0 0 46 19.5a12.14 12.14 0 0 1-3.83 1.46A6.01 6.01 0 0 0 32 25.43a17.09 17.09 0 0 1-12.63-6.4.6.6 0 0 0 .26.93A6.07 6.07 0 0 0 19 30.19a5.86 5.86 0 0 1-2.72-.75v.07a6 6 0 0 0 4.84 5.88 6.2 6.2 0 0 1-2.7.1A6 6 0 0 0 32 42a12.14 12.14 0 0 1-7.5 2.57c-.49 0-.98-.03-1.46-.08a17.16 17.16 0 0 0 9.36 2.75C34.1 59 46.2 41.5 46.2 25.52c0-.2-.01-.39-.02-.59A12.38 12.38 0 0 0 47.2 22z" fill="#fff"/>
+      </svg>
+    </div>
+    <div class="logo-card github" title="GitHub">
+      <svg fill="none" viewBox="0 0 64 64">
+        <circle class="logo-bg-circ" fill="#23272f" cx="32" cy="32" r="28"/>
+        <path fill="#fff" d="M32 17c-8.3 0-15 6.7-15 15 0 6.6 4.4 12.2 10.4 14.2.8.2 1.1-.3 1.1-.8 0-.4-.02-1.6-.03-3-4.2.9-5-2-5-2-.7-1.6-1.7-2.1-1.7-2.1-1.4-1 0-1 .1-1.0 1.5.1 2.2 1.6 2.2 1.6 1.4 2.4 3.7 1.7 4.6 1.3.1-.7.5-1.6 1-2-3.4-.4-7-1.7-7-7.6 0-1.7.6-3.1 1.6-4.2-.2-.4-.7-1.9.1-4 0 0 1.3-.4 4.3 1.6 1.2-.3 2.3-.5 3.5-.5 1.2 0 2.3.2 3.5.5 3-2 4.3-1.6 4.3-1.6.8 2.1.3 3.6.1 4 .9 1 1.6 2.5 1.6 4.2 0 5.9-3.6 7.2-7 7.6.5.4 1.1 1.3 1.1 2.6 0 1.9-.02 3.4-.02 3.9 0 .5.3 1 1.2.8C42.6 44.2 47 38.6 47 32c0-8.3-6.7-15-15-15z"/>
+      </svg>
+    </div>
+    <div class="logo-card linkedin" title="LinkedIn">
+      <svg fill="none" viewBox="0 0 64 64">
+        <circle class="logo-bg-circ" fill="#0a66c2" cx="32" cy="32" r="28"/>
+        <rect x="19" y="27" width="7" height="16" rx="2" fill="#fff"/>
+        <rect x="19" y="20" width="7" height="5" rx="2" fill="#fff"/>
+        <rect x="29" y="27" width="7" height="16" rx="2" fill="#fff"/>
+        <path d="M38 34c0-3-2-5-4.8-5-2.7 0-4.6 1.7-4.6 4.6V43h7v-6.8c0-1.4.7-2.1 1.9-2.1s1.9.7 1.9 2.1V43H47v-8.5C47 28.7 43.5 25.7 38 25.7z" fill="#fff" fill-opacity="0.97"/>
+      </svg>
+    </div>
+    <div class="logo-card instagram" title="Instagram">
+      <svg fill="none" viewBox="0 0 64 64">
+        <defs>
+          <radialGradient id="instaGrad" cx="50%" cy="50%" r="54%" fx="50%" fy="50%">
+            <stop offset="0%" stop-color="#feda75"/>
+            <stop offset="50%" stop-color="#d62976"/>
+            <stop offset="74%" stop-color="#962fbf"/>
+            <stop offset="100%" stop-color="#4f5bd5"/>
+          </radialGradient>
+        </defs>
+        <circle class="logo-bg-circ" fill="url(#instaGrad)" cx="32" cy="32" r="28"/>
+        <rect x="20" y="20" width="24" height="24" rx="7" fill="#fff" fill-opacity="0.88"/>
+        <circle cx="32" cy="32" r="8" fill="url(#instaGrad)"/>
+        <circle cx="42" cy="24.2" r="2" fill="#feda75"/>
+      </svg>
+    </div>
+  </div>
+  <script>
+    // Neon enhanced ripple effect
+    document.querySelectorAll('.logo-card').forEach(card => {
+      card.addEventListener('click', e => {
+        let ripple = document.createElement('span');
+        ripple.className = 'ripple-efx';
+        ripple.style.left = (e.offsetX - 31) + 'px';
+        ripple.style.top = (e.offsetY - 31) + 'px';
+        card.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+      });
+    });
+  </script>
+</body>
+</html>
