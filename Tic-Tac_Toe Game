@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Supersonic Tic Tac Toe</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+  body {
+    margin:0; height:100vh;
+    display:flex; justify-content:center; align-items:center;
+    font-family:'Orbitron', sans-serif;
+    background: linear-gradient(130deg,#1a2980 0%,#26d0ce 100%);
+    overflow:hidden;
+  }
+  .container {
+    background: rgba(25, 34, 54, 0.95);
+    padding: 1.8rem 1.4rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px #00f2fe99;
+    text-align: center;
+    min-width: 280px;
+  }
+  .board-winner-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    gap: 18px;
+    margin-bottom: 0.8rem;
+  }
+  .title {
+    color: #fff;
+    font-size: 1.9rem;
+    margin-bottom: 1rem;
+    letter-spacing: 2px;
+    text-shadow: 0 0 12px #00f2fe;
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  @keyframes glow {
+    to { text-shadow: 0 0 24px #fd6cff99, 0 0 10px #00ffe0; }
+  }
+  .game-board {
+    display: grid;
+    grid-template-columns: repeat(3, 66px);
+    gap: 12px;
+  }
+  .cell {
+    width: 66px; height: 66px;
+    background: linear-gradient(125deg,#24c6dc 10%,#514a9d 90%);
+    border-radius: 15px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; color: #fff;
+    cursor: pointer;
+    box-shadow: 0 0 10px #00ffe0aa;
+    user-select: none;
+    outline: none;
+    transition: box-shadow 0.25s, transform 0.15s;
+  }
+  .cell.pop {
+    animation: pop 0.25s cubic-bezier(.23,1.7,.58,.98);
+  }
+  @keyframes pop {
+    0% { transform: scale(0.5); }
+    100% { transform: scale(1); }
+  }
+  .cell.x { color: #16e8fc; text-shadow: 0 0 18px #0ff6; }
+  .cell.o { color: #ff99fb; text-shadow: 0 0 18px #f7a7ff; }
+  .cell.winner {
+    background: linear-gradient(90deg,#fccb31 8%,#ff417e 92%);
+    box-shadow: 0 0 30px #f8ab500c;
+  }
+  .status {
+    color: #fff;
+    font-size: 1.1rem;
+    min-height: 28px;
+    letter-spacing: 1.3px;
+    text-shadow: 0 0 8px #31e6b488;
+    margin-bottom: 0.7rem;
+  }
+  button {
+    background: linear-gradient(90deg,#11998e,#38ef7d 85%);
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 14px;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 0 14px #43e97bb5;
+    transition: 0.22s;
+  }
+  button:hover {
+    background: linear-gradient(90deg,#38ef7d,#11998e 85%);
+    box-shadow: 0 0 22px #38ef7d99;
+    transform: scale(1.05);
+  }
+  /* Winner panel inside container */
+  .winner-panel {
+    min-width: 110px;
+    min-height: 58px;
+    background: linear-gradient(120deg,#1a61bd 10%,#21f5d0 90%);
+    border-radius: 20px;
+    box-shadow: 0 0 40px #2bffd922;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    letter-spacing: 1.8px;
+    font-size: 1.05rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    font-family: 'Orbitron', monospace;
+    user-select: none;
+  }
+  .winner-panel.show {
+    opacity: 1;
+    animation: pulse 1.5s ease infinite alternate;
+  }
+  .winner-panel .who {
+    font-size: 2.4rem;
+    font-weight: bold;
+    text-shadow: 0 0 26px #fff9, 0 0 10px #1eff99;
+    margin-top: 4px;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 45px #00ffe2bb; }
+    100% { box-shadow: 0 0 78px #00ffcaee inset; }
+  }
+  /* Confetti animation */
+  @keyframes fly {
+    to {
+      transform: translateY(100vh) rotate(720deg) scale(0.95);
+      opacity: 0;
+    }
+  }
+  @media (max-width:600px) {
+    .container {
+      padding: 1rem 0.8rem;
+      min-width: unset;
+    }
+    .board-winner-wrapper {
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 0.5rem;
+    }
+    .game-board {
+      grid-template-columns: repeat(3, 42px);
+      gap: 8px;
+    }
+    .cell {
+      width: 42px;
+      height: 42px;
+      font-size: 1.3rem;
+      border-radius: 10px;
+    }
+    .winner-panel {
+      min-width: auto;
+      min-height: 48px;
+      font-size: 0.95rem;
+      margin-top: 0;
+    }
+    .winner-panel .who {
+      font-size: 1.8rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="title">Supersonic Tic Tac Toe</div>
+    <div class="board-winner-wrapper">
+      <div id="game-board" class="game-board" role="grid" aria-label="Tic Tac Toe Board"></div>
+      <div id="winner-panel" class="winner-panel" aria-live="polite" aria-atomic="true">
+        WINNER
+        <div class="who" id="who-won"></div>
+      </div>
+    </div>
+    <div id="status" class="status" aria-live="polite" aria-atomic="true"></div>
+    <button id="restart-btn" aria-label="Restart game">Restart</button>
+  </div>
+
+<script>
+  const board = document.getElementById('game-board');
+  const status = document.getElementById('status');
+  const restartBtn = document.getElementById('restart-btn');
+  const winnerPanel = document.getElementById('winner-panel');
+  const whoWon = document.getElementById('who-won');
+
+  let gameState = Array(9).fill('');
+  let xTurn = true;
+  let running = true;
+
+  function init() {
+    gameState.fill('');
+    xTurn = true;
+    running = true;
+    status.textContent = "Player X's move �";
+    winnerPanel.classList.remove('show');
+    whoWon.textContent = '';
+    drawBoard();
+  }
+
+  function drawBoard() {
+    board.innerHTML = '';
+    gameState.forEach((cell, i) => {
+      const div = document.createElement('div');
+      div.className = 'cell' + (cell ? ` ${cell.toLowerCase()}` : '');
+      div.tabIndex = (!cell && running) ? 0 : -1;
+      div.textContent = cell;
+      // Add pop animation on newly placed mark
+      if(cell){
+        div.classList.add('pop');
+        setTimeout(() => div.classList.remove('pop'), 260);
+      }
+      div.setAttribute('role', 'gridcell');
+      div.setAttribute('aria-label', cell || 'Empty cell');
+      div.onclick = () => move(i);
+      div.onkeydown = e => { if(['Enter',' '].includes(e.key)) move(i); };
+      board.appendChild(div);
+    });
+  }
+
+  function move(i){
+    if(!running || gameState[i]) return;
+    gameState[i] = xTurn ? 'X' : 'O';
+    drawBoard();
+    const winner = checkWin();
+    if(winner){
+      showWinner(winner.combo, winner.letter);
+      return;
+    }
+    if(gameState.every(c=>c)){
+      running = false;
+      status.textContent = "� It's a draw! Tap restart.";
+      winnerPanel.classList.remove('show');
+      whoWon.textContent = '';
+      return;
+    }
+    xTurn = !xTurn;
+    status.textContent = `Player ${xTurn ? 'X' : 'O'}'s move �`;
+  }
+
+  function checkWin(){
+    const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+    for(const combo of wins){
+      const [a,b,c] = combo;
+      if(gameState[a] && gameState[a]===gameState[b] && gameState[b]===gameState[c]){
+        return {combo, letter: gameState[a]};
+      }
+    }
+    return null;
+  }
+
+  function showWinner(combo, letter){
+    running = false;
+    combo.forEach(i => board.children[i].classList.add('winner'));
+    status.innerHTML = `� Player <b>${letter}</b> wins! 🎊`;
+    whoWon.textContent = letter;
+    winnerPanel.classList.add('show');
+    confetti();
+  }
+
+  function confetti(){
+    for(let i=0; i<20; i++){
+      const c = document.createElement('div');
+      Object.assign(c.style, {
+        position:'fixed',
+        width:'6px', height:'6px',
+        borderRadius:'3px',
+        background:`hsl(${Math.random()*360},75%,65%)`,
+        left:`${Math.random()*100}vw`,
+        top:'-10px',
+        opacity:'0.85',
+        transform:`scale(${0.7+Math.random()*0.6}) rotate(${Math.random()*360}deg)`,
+        animation:'fly 1.3s ease-out forwards',
+        pointerEvents: 'none',
+        zIndex: '9999',
+      });
+      c.className = 'confetti';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 1300);
+    }
+  }
+
+  restartBtn.onclick = init;
+  window.onload = init;
+</script>
+
+</body>
+</html>
