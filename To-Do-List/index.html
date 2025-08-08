@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Super Sonic To-Do List</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            min-height: 100vh;
+            margin: 0;
+            background: radial-gradient(ellipse at top left, #1f2235 60%, #24243e 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .todo-container {
+            background: rgba(255, 255, 255, 0.13);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(17.5px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 40px 35px 35px 35px;
+            width: 370px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .todo-container::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 250px;
+            height: 250px;
+            background: linear-gradient(135deg, #00ffe7, #00f7ff60, #ff00f7b2);
+            filter: blur(75px);
+            z-index: 0;
+        }
+
+        h1 {
+            color: #00ffe7;
+            letter-spacing: 3px;
+            margin-bottom: 18px;
+            font-size: 2.1rem;
+            z-index: 1;
+            position: relative;
+            text-shadow: 0 0 12px #00ffe7, 0 0 2px #0ff;
+        }
+
+        #todo-form {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            z-index: 1;
+            position: relative;
+        }
+
+        #todo-input {
+            padding: 10px;
+            border-radius: 12px;
+            border: none;
+            width: 63%;
+            background: rgba(20,30,70,0.16);
+            color: #fff;
+            font-size: 1.08rem;
+            outline: none;
+            box-shadow: 0 0 6px #0ff4, inset 0 0 4px #fff2;
+            transition: 0.2s;
+        }
+
+        #add-btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.08rem;
+            background-color: #00ffe7;
+            color: #003c3d;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 12px #00ffe755;
+            transition: background 0.2s;
+        }
+
+        #add-btn:hover {
+            background: linear-gradient(90deg, #00ffe7 10%, #ff00f7 90%);
+            color: #fff;
+        }
+
+        #todo-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            z-index: 1;
+            position: relative;
+        }
+
+        .todo-item {
+            background: rgba(30, 30, 70, 0.40);
+            color: #fff;
+            margin-bottom: 12px;
+            padding: 13px 12px 13px 16px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 8px #00ffe734, 0 0 8px #ff00f768;
+            animation: slideIn 0.3s both;
+            position: relative;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0;}
+            to   { transform: translateX(0); opacity: 1;}
+        }
+
+        .todo-item.completed {
+            text-decoration: line-through;
+            opacity: 0.65;
+            background: rgba(20, 70, 75, 0.25);
+            color: #00ffe7;
+            box-shadow: 0 0 8px #00ffd833;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .toggle-btn, .delete-btn {
+            border: none;
+            background: none;
+            color: #00ffe7;
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 6px;
+            transition: background 0.18s;
+        }
+
+        .toggle-btn:hover, .delete-btn:hover {
+            background: rgba(0,255,231,0.16);
+        }
+
+        #clear-all {
+            margin-top: 10px;
+            background: linear-gradient(90deg,#ff00f7 10%, #00ffe7 90%);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 30px;
+            font-size: 1.09rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 12px #00ffd9aa, 0 0 12px #ff00f7aa;
+            transition: filter 0.2s;
+        }
+
+        #clear-all:hover {
+            filter: brightness(1.15) blur(0.5px);
+        }
+
+        ::-webkit-scrollbar {
+            width: 7px;
+            background: #222;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00ffe7;
+            border-radius: 7px;
+        }
+    </style>
+</head>
+<body>
+<div class="todo-container">
+    <h1><span>�</span> Super Sonic To-Do</h1>
+    <form id="todo-form" autocomplete="off">
+        <input type="text" id="todo-input" placeholder="What needs to be done?" required />
+        <button type="submit" id="add-btn">Add</button>
+    </form>
+    <ul id="todo-list"></ul>
+    <button id="clear-al">Clear All</button>
+</div>
+<script>
+    const todoForm = document.getElementById("todo-form");
+    const todoInput = document.getElementById("todo-input");
+    const todoList = document.getElementById("todo-list");
+    const clearAllBtn = document.getElementById("clear-all");
+
+    // Retrieve saved todos from localStorage
+    let todos = JSON.parse(localStorage.getItem('todos_sonic')) || [];
+
+    function renderTodos() {
+        todoList.innerHTML = "";
+        todos.forEach((todo, idx) => {
+            const li = document.createElement("li");
+            li.className = "todo-item" + (todo.completed ? " completed" : "");
+            li.innerHTML = `
+                <span>${todo.text}</span>
+                <span class="action-buttons">
+                    <button class="toggle-btn" title="Complete">&#10003;</button>
+                    <button class="delete-btn" title="Delete">&#128465;</button>
+                </span>
+            `;
+            // Toggle done
+            li.querySelector(".toggle-btn").onclick = () => {
+                todos[idx].completed = !todos[idx].completed;
+                saveAndRender();
+            };
+            // Delete
+            li.querySelector(".delete-btn").onclick = () => {
+                todos.splice(idx, 1);
+                saveAndRender();
+            };
+            todoList.appendChild(li);
+        });
+    }
+
+    function saveAndRender() {
+        localStorage.setItem('todos_sonic', JSON.stringify(todos));
+        renderTodos();
+    }
+
+    todoForm.onsubmit = (e) => {
+        e.preventDefault();
+        const value = todoInput.value.trim();
+        if(value) {
+            todos.unshift({ text: value, completed: false });
+            saveAndRender();
+            todoInput.value = "";
+            todoInput.focus();
+        }
+    };
+
+    clearAllBtn.onclick = () => {
+        todos = [];
+        saveAndRender();
+    };
+
+    renderTodos();
+</script>
+</body>
+</html>

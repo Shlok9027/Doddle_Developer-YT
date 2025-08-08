@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock Paper Scissors - Super Sonic Colors</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&display=swap');
+    :root {
+      --glass-bg: rgba(30,34,80,0.75);
+      --glass-border: rgba(255,255,255,0.15);
+      --neon: #28f3ee;
+      --rock-grad: linear-gradient(135deg,#1963ed 10%,#18dde5 70%,#57aefc 100%);
+      --paper-grad: linear-gradient(135deg,#ffe881 15%,#fff 55%,#f6a369 100%);
+      --scissors-grad: linear-gradient(135deg,#ff71b3 10%,#ffb032 50%,#ff4966 100%);
+      --rock-glow: 0 0 32px 0 #2fa9fb44, 0 0 0 #fff0;
+      --paper-glow: 0 0 32px 0 #ffe88144, 0 0 0 #fff0;
+      --scissors-glow: 0 0 32px 0 #ff71b344, 0 0 0 #fff0;
+      --win: #60FF70;
+      --lose: #FF166F;
+      --draw: #FEFFAC;
+      --shadow: 0 4px 32px 0 rgba(40,243,238,0.18);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+      font-family: 'Orbitron', Arial, Helvetica, sans-serif;
+    }
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #131862 0%, #30cfd0 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+    h1 {
+      font-size: 3rem;
+      letter-spacing: 4px;
+      color: var(--neon);
+      text-shadow: 0 0 24px var(--neon), 0 0 2px #fff;
+      margin-top: 2.5rem;
+      margin-bottom: 30px;
+      font-weight: 800;
+      filter: drop-shadow(0 0 10px #22e0ff77);
+      transition: color 0.6s;
+    }
+    .game-container {
+      padding: 2rem 2.5rem 3rem 2.5rem;
+      border-radius: 2.2rem;
+      background: var(--glass-bg);
+      box-shadow: var(--shadow);
+      border: 1.5px solid var(--glass-border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.7rem;
+      min-width: 350px;
+      max-width: 95vw;
+      position:relative;
+      z-index:2;
+    }
+    .choices {
+      display: flex;
+      gap: 2.3rem;
+      margin-bottom: 1rem;
+      z-index:2;
+    }
+    /* Gradient Buttons, Colorful, Animated Glow */
+    .choice-btn {
+      border: none;
+      outline: none;
+      border-radius: 100%;
+      padding: 0;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition:
+        transform .18s cubic-bezier(.59,-0.15,.48,1.42),
+        box-shadow 0.22s cubic-bezier(.57,.29,.53,1.33),
+        filter 0.23s;
+      background-size: 180% 180%;
+      /* Individual gradients set below */
+    }
+    .choice-btn[data-choice=rock] {
+      background: var(--rock-grad);
+      box-shadow: var(--rock-glow);
+      animation: gradMove1 5s linear infinite alternate;
+    }
+    .choice-btn[data-choice=paper] {
+      background: var(--paper-grad);
+      box-shadow: var(--paper-glow);
+      animation: gradMove2 6s linear infinite alternate;
+    }
+    .choice-btn[data-choice=scissors] {
+      background: var(--scissors-grad);
+      box-shadow: var(--scissors-glow);
+      animation: gradMove3 7s linear infinite alternate;
+    }
+    @keyframes gradMove1 {to{background-position:100% 50%;}}
+    @keyframes gradMove2 {to{background-position:0% 100%;}}
+    @keyframes gradMove3 {to{background-position:100% 100%;}}
+
+    /* Extra hover, focus effect and animated light swipe */
+    .choice-btn::before {
+      content: '';
+      position: absolute;
+      left: -60%; top: -60%;
+      width: 220%; height: 220%;
+      background: linear-gradient(110deg,rgba(255,255,255,.13) 0%,rgba(255,255,255,.68) 30%,rgba(255,255,255,0.04) 70%);
+      transform: skew(22deg) scaleX(0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.32s;
+      z-index: 2;
+      filter: blur(3.6px);
+    }
+    .choice-btn:hover::before,
+    .choice-btn:focus::before {
+      opacity: 1;
+      animation: shineAcross .85s linear;
+    }
+    @keyframes shineAcross {
+      0% { left:-60%; opacity:.4;}
+      30% { left:20%; opacity:.8;}
+      80% { left:100%; opacity:.95;}
+      100% { left:160%; opacity:.1;}
+    }
+    .choice-btn:focus {
+      outline: 3px solid #fff;
+      outline-offset: 5px;
+      z-index: 9;
+    }
+    /* Hover/focus: glow intensifies, shakes slightly, text shadow pulse */
+    .choice-btn:hover, .choice-btn:focus {
+      transform: scale(1.09) skewY(-1deg) rotate(-2deg);
+      filter: brightness(1.1) saturate(1.29) drop-shadow(0 0 16px #fff4);
+      box-shadow: 0 0 34px 8px #fff2, 0 0 54px 10px currentColor;
+      z-index: 10;
+      /* rest added by JS for even more chroma! */
+    }
+    .choice-btn:active {
+      transform: scale(.98) rotate(3deg);
+      filter:brightness(.98) saturate(1.7);
+      transition: transform 0.08s, filter 0.09s;
+    }
+
+    .choice-icon {
+      font-size: 3.5rem;
+      filter: drop-shadow(0 0 16px #fff5) drop-shadow(0 0 26px currentColor);
+      animation: iconpop 0.55s cubic-bezier(.68,-0.11,.81,1.32);
+      transition: text-shadow .25s, filter .26s;
+      z-index: 3;
+      /* Use different color per icon */
+    }
+    .choice-btn[data-choice=rock] .choice-icon { color: #3bb6f7;}
+    .choice-btn[data-choice=paper] .choice-icon { color: #ffe881;}
+    .choice-btn[data-choice=scissors] .choice-icon { color: #ff71b3;}
+
+    .choice-btn:hover .choice-icon,
+    .choice-btn:focus .choice-icon {
+      text-shadow: 0 0 34px #fff9, 0 0 8px #fff, 0 0 18px currentColor;
+      filter: drop-shadow(0 0 24px #fff7) drop-shadow(0 0 34px currentColor);
+      transform: scale(1.16) rotate(-2deg);
+      animation: pulse 1s infinite alternate;
+    }
+    @keyframes iconpop {
+      from {transform: scale(0.6);}
+      to {transform: scale(1);}
+    }
+    @keyframes pulse {
+      0% { color: inherit; }
+      100% { color: #fff; }
+    }
+    /* Scoreboard */
+    .score-board {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin: 1.4rem 0 0.3rem 0;
+      width: 100%;
+    }
+    .score {
+      background: rgba(255,255,255,0.08);
+      border-radius: 1.2rem;
+      padding: 0.8rem 1.3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 85px;
+      transition: background 0.5s;
+      box-shadow: 0 1px 10px #fff1;
+      border: 1.5px solid var(--glass-border);
+    }
+    #user-score, #comp-score {
+      font-size: 2.7rem;
+      color: var(--neon);
+      font-weight: 800;
+      transition: color 0.25s;
+      letter-spacing: 1px;
+    }
+    .score p:last-child {
+      font-size: 0.97rem;
+      color: #fff;
+      opacity: 0.74;
+      letter-spacing: 1px;
+    }
+    .msg-container {
+      margin-top: 1.45rem;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #msg {
+      font-size: 1.3rem;
+      background: rgba(20,40,48,0.93);
+      color: #fff;
+      border-radius: 1.5rem;
+      padding: 0.95rem 1.65rem;
+      margin: 0 auto;
+      display: inline-block;
+      letter-spacing: 1px;
+      box-shadow: 0 0 8px #28f3ee44;
+      font-weight: 600;
+      text-shadow: 0 0 6px #35ffd77c;
+      border: 1.5px solid var(--neon);
+      transition: background 0.4s, color 0.33s, border 0.3s;
+    }
+    .msg-win {
+      background: rgba(44,98,56,0.92);
+      color: var(--win);
+      border-color: var(--win);
+      text-shadow: 0 0 8px #B3FFABcc;
+    }
+    .msg-lose {
+      background: rgba(100,20,49,0.92);
+      color: var(--lose);
+      border-color: var(--lose);
+      text-shadow: 0 0 12px #ff166f88;
+    }
+    .msg-draw {
+      background: rgba(96,96,43,0.92);
+      color: var(--draw);
+      border-color: var(--draw);
+      text-shadow: 0 0 8px #feffac88;
+    }
+    .move-preview {
+      font-size: 1.1rem;
+      color: #35ffd7;
+      padding: 2px 10px;
+      margin: 0 4px;
+      border-radius: 8px;
+      background: #10154f99;
+      opacity: 0.85;
+      letter-spacing: 1px;
+      font-weight: 600;
+      border: 1px solid var(--neon);
+      box-shadow: 0 0 8px #28f3ee33;
+      margin-bottom: 2px;
+      display: inline-block;
+      transition: color 0.3s, background 0.3s;
+    }
+    .move-preview.comp { color: #FFA07A; border-color: #FFA07A; background: #151915cc;}
+    /* Responsive */
+    @media (max-width: 600px) {
+      .game-container {padding: 1.2rem 0.6rem;}
+      .score-board {gap: 1.4rem;}
+      .choice-btn {width: 80px; height: 80px;}
+      .choice-icon {font-size: 2.5rem;}
+      h1 {font-size: 2rem;}
+    }
+    .footer {
+      text-align: center;
+      color: #fff8;
+      font-size: .98rem;
+      margin-top: 2.6rem;
+      letter-spacing: 1.3px;
+      opacity: .7;
+      padding-bottom: 1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>ROCK <span style="color:#FFF;">PAPER</span> <span style="color:#FFA07A">SCISSORS</span></h1>
+  <div class="game-container">
+    <div class="choices">
+      <button class="choice-btn" data-choice="rock" tabindex="1" aria-label="Rock">
+        <span class="choice-icon">✊</span>
+      </button>
+      <button class="choice-btn" data-choice="paper" tabindex="2" aria-label="Paper">
+        <span class="choice-icon">✋</span>
+      </button>
+      <button class="choice-btn" data-choice="scissors" tabindex="3" aria-label="Scissors">
+        <span class="choice-icon">✌️</span>
+      </button>
+    </div>
+    <div class="score-board">
+      <div class="score">
+        <p id="user-score">0</p>
+        <p>You</p>
+      </div>
+      <div class="score">
+        <p id="comp-score">0</p>
+        <p>Computer</p>
+      </div>
+    </div>
+    <div class="msg-container">
+      <div id="msg">� <span style="color:#28f3ee">Ready?</span> Make your move! 🔥</div>
+    </div>
+  </div>
+  <div class="footer">
+    <span>Super Sonic Rock Paper Scissors &mdash; <span style="color:#28f3ee">by You</span></span>
+  </div>
+  <script>
+    let userScore = 0, compScore = 0;
+
+    const msg = document.getElementById("msg");
+    const userScoreEl = document.getElementById("user-score");
+    const compScoreEl = document.getElementById("comp-score");
+
+    const choiceBtns = document.querySelectorAll(".choice-btn");
+
+    // Emojis for quick feedback
+    const victory = ["�", "🔥", "✨", "🥇", "👑"];
+    const defeat = ["�", "💀", "💔", "☠️", "😵"];
+    const drawem = ["�", "🤝", "😅", "🙏", "🤔"];
+
+    // Computer move
+    const genCompChoice = () => {
+      const opt = ["rock", "paper", "scissors"];
+      return opt[Math.floor(Math.random()*3)];
+    }
+    // Animate numbers
+    function animateScore(el, toScore) {
+      const now = parseInt(el.innerText, 10);
+      if(now === toScore) return;
+      let step = toScore > now ? 1 : -1;
+      let frame = 0;
+      let timer = setInterval(()=> {
+        el.innerText = now + step*frame;
+        frame++;
+        if ((now + step*frame) === toScore) clearInterval(timer);
+      }, 30);
+    }
+
+    function highlightMsg(type, html) {
+      msg.className = '';
+      msg.innerHTML = html;
+      if(type==='win') msg.classList.add('msg-win');
+      else if(type==='lose') msg.classList.add('msg-lose');
+      else msg.classList.add('msg-draw');
+    }
+
+    function movePreview(move, who='user') {
+      let nice, col;
+      if (move==='rock') {nice='Rock ✊';col='#3bb6f7';}
+      else if (move==='paper') {nice='Paper ✋';col='#ffe881';}
+      else {nice='Scissors ✌️';col='#ffa07a';}
+      return `<span class="move-preview ${who==='comp'?'comp':''}" style="border-color:${col};color:${col}">${nice}</span>`;
+    }
+
+    function drawGame(user, comp) {
+      highlightMsg("draw",
+        `${drawem[Math.floor(Math.random()*drawem.length)]} <strong>It's a Draw!</strong> <br>
+        You picked ${movePreview(user)}, Computer picked ${movePreview(comp,'comp')}`
+      );
+    }
+
+    function showWinner(userWin, user, comp) {
+      if(userWin) {
+        userScore++;
+        animateScore(userScoreEl, userScore);
+        highlightMsg("win",
+          `${victory[Math.floor(Math.random()*victory.length)]} <strong>You Win!</strong><br>
+          Your ${movePreview(user)} beats ${movePreview(comp,'comp')}`
+        );
+      } else {
+        compScore++;
+        animateScore(compScoreEl, compScore);
+        highlightMsg("lose",
+          `${defeat[Math.floor(Math.random()*defeat.length)]} <strong>You Lose.</strong><br>
+          Computer's ${movePreview(comp,'comp')} beats your ${movePreview(user)}`
+        );
+      }
+    }
+
+    function playGame(userChoice) {
+      const compChoice = genCompChoice();
+      if(userChoice === compChoice){
+        drawGame(userChoice, compChoice);
+      } else {
+        let userWin = false;
+        if(userChoice==='rock') userWin = compChoice==='scissors';
+        else if(userChoice==='paper') userWin = compChoice==='rock';
+        else if(userChoice==='scissors') userWin = compChoice==='paper';
+        showWinner(userWin, userChoice, compChoice);
+      }
+    }
+
+    // Bonus chroma burst glow on click
+    choiceBtns.forEach(btn => {
+      btn.addEventListener("click", ()=> {
+        const user = btn.getAttribute("data-choice");
+        playGame(user);
+        // Color burst effect
+        btn.style.boxShadow = "0 0 42px 20px #fff, 0 0 80px 15px var(--neon)";
+        setTimeout(()=>{
+          btn.style.boxShadow = "";
+        }, 220);
+      });
+    });
+
+    // Keyboard 1/2/3
+    document.addEventListener('keydown', (e)=>{
+      if(e.key==='1') choiceBtns[0].focus(),choiceBtns[0].click();
+      else if(e.key==='2') choiceBtns[1].focus(),choiceBtns[1].click();
+      else if(e.key==='3') choiceBtns[2].focus(),choiceBtns[2].click();
+    });
+  </script>
+</body>
+</html>

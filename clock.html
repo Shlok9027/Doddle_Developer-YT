@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Classic Old-Style Glass Clock</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap");
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(
+        ellipse at 60% 30%,
+        #e4cb9c 0%,
+        #bb9859 47%,
+        #433320 100%
+      );
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: "Orbitron", monospace;
+      color: #6b4e15;
+      overflow-x: hidden;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    h1 {
+      letter-spacing: 3px;
+      color: #433320;
+      margin: 35px 0 34px 0;
+      font-size: 2.2rem;
+      text-shadow: 0 2px 32px #c7b179, 0 0 5px #fff5;
+    }
+    /* --- Vintage Glass Analog Clock --- */
+    .clock-wrap {
+      width: min(98vw, 370px);
+      height: min(98vw, 370px);
+      position: relative;
+      background: linear-gradient(
+          135deg,
+          rgba(239, 203, 129, 0.24) 37%,
+          rgba(211, 189, 135, 0.13)
+        ),
+        radial-gradient(
+          circle at 65% 28%,
+          #d3bc96 35%,
+          #9c7753 87%,
+          #44331d 100%
+        ),
+        #cdb278;
+      border-radius: 50%;
+      box-shadow: 0 7px 68px #d2a86223, 0 6px 32px #44332277,
+        0 0 30px 5px #fff1 inset;
+      border: 8px solid #c69a49;
+      outline: 5px solid #fff9;
+      backdrop-filter: blur(4px);
+      overflow: visible;
+    }
+    .clock-face {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      user-select: none;
+    }
+    .glass-reflect {
+      pointer-events: none;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(
+        ellipse at var(--x, 54%) var(--y, 19%),
+        rgba(255, 255, 255, 0.14) 15%,
+        rgba(255, 255, 255, 0.01) 85%
+      );
+      mix-blend-mode: screen;
+      filter: blur(1.6px);
+      transition: background 0.15s ease;
+    }
+    .glow {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 84%;
+      height: 82%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      pointer-events: none;
+      box-shadow: 0 0 25px 6px #ecd28a66, 0 0 32px 10px #c3a76555,
+        0 0 0 0 #fff0;
+      opacity: 0.18;
+    }
+    .numbers {
+      pointer-events: none;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      font-size: 1.16rem;
+      font-weight: 800;
+      color: #6b4e15;
+      text-shadow: 0 2px 11px #b9a06088, 0 0 3px #fff9;
+      letter-spacing: 0.04em;
+      font-family: 'Georgia', serif;
+    }
+    .number {
+      position: absolute;
+      width: 33px;
+      height: 33px;
+      text-align: center;
+      line-height: 33px;
+      font-weight: 900;
+      filter: drop-shadow(0 0 5px #f9e9afcc);
+      user-select: none;
+      font-family: 'Georgia', serif;
+    }
+    .ticks {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .tick {
+      position: absolute;
+      width: 2.4px;
+      height: 16px;
+      background: linear-gradient(0deg, #f7e1ac 50%, #755726 100%);
+      border-radius: 2px;
+      opacity: 0.36;
+      left: 50%;
+      top: 50%;
+      transform-origin: 50% 100%;
+      user-select: none;
+      transition: background-color 0.3s ease;
+    }
+    .tick.hour {
+      height: 28px;
+      width: 4px;
+      background: linear-gradient(0deg, #d2a862 40%, #fff3 100%);
+      opacity: 0.81;
+    }
+    .hand {
+      position: absolute;
+      bottom: 50%;
+      left: 50%;
+      transform-origin: 50% 100%;
+      border-radius: 7px 7px 0 0;
+      box-shadow: 0 0 5px #cda54488;
+      transition: transform 0.13s cubic-bezier(0.3, 1.7, 0.35, 1.3);
+      user-select: none;
+    }
+    .hour {
+      width: 13.5px;
+      height: 76px;
+      margin-left: -6.7px;
+      background: linear-gradient(180deg, #c19347 69%, #6d5016 100%);
+    }
+    .minute {
+      width: 8px;
+      height: 112px;
+      margin-left: -4px;
+      background: linear-gradient(180deg, #e0c182 50%, #937028 91%);
+    }
+    .second {
+      width: 3px;
+      height: 133px;
+      margin-left: -1.5px;
+      background: linear-gradient(180deg, #a64513 10%, #eed393 96%);
+      box-shadow: 0 0 11px #a6451366;
+    }
+    .center-dot {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 23px;
+      height: 23px;
+      border-radius: 50%;
+      border: 5px solid #cda544;
+      background: radial-gradient(
+        circle at 30% 64%,
+        #fff9 68%,
+        #f7d279 97%,
+        #62430c 100%
+      );
+      box-shadow: 0 0 16px #ffd989, 0 0 4px #fff7;
+      z-index: 5;
+      user-select: none;
+    }
+    .clock-face::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 265px;
+      height: 265px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      box-shadow: 0 0 52px 10px #ffe7bb96, 0 0 31px #dac093dd;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+    .clock-face::after {
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      left: 17px;
+      bottom: -21px;
+      width: 85%;
+      height: 26px;
+      border-radius: 43% 38% 65% 100%;
+      background: radial-gradient(
+        ellipse at center,
+        #d2a86288 24%,
+        #433320cc 100%
+      );
+      z-index: 0;
+      opacity: 0.13;
+    }
+    .info-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 13px;
+      margin-top: 30px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: #847220;
+      text-shadow: 0 1.5px 8px #efd18fcc;
+      user-select: none;
+    }
+    .info-row .ampm {
+      color: #a65d16;
+      font-size: 1.04em;
+      padding-left: 7px;
+      font-weight: 800;
+      letter-spacing: 2.5px;
+      text-shadow: 0 0 16px #deb274cc;
+      font-style: italic;
+    }
+    .digital-clock {
+      margin-top: 20px;
+      font-size: 2.16rem;
+      color: #694e13;
+      text-shadow: 0 0 11px #9c8449, 0 0 6px #cda544ad;
+      letter-spacing: 0.11em;
+      line-height: 1.12;
+      user-select: none;
+      font-family: 'Georgia', serif;
+    }
+    .colon {
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      0%,
+      50% {
+        opacity: 1;
+      }
+      51%,
+      100% {
+        opacity: 0;
+      }
+    }
+    @media (max-width: 620px) {
+      .clock-wrap {
+        width: 97vw;
+        height: 97vw;
+        max-width: 295px;
+        max-height: 295px;
+      }
+      .info-row {
+        font-size: 0.97rem;
+      }
+      .digital-clock {
+        font-size: 1.36rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>🕰️ Classic Glass Clock</h1>
+  <div class="clock-wrap">
+    <div class="clock-face" id="clock-face" aria-label="Classic Analog Clock" role="img">
+      <div class="glow"></div>
+      <div class="numbers" id="numbers"></div>
+      <div class="ticks" id="ticks"></div>
+      <div class="hand hour" id="hour-hand"></div>
+      <div class="hand minute" id="minute-hand"></div>
+      <div class="hand second" id="second-hand"></div>
+      <div class="center-dot"></div>
+      <div class="glass-reflect" id="glass-reflect" style="--x: 54%; --y: 19%"></div>
+    </div>
+  </div>
+  <div class="digital-clock" id="digital-clock" aria-label="Digital clock display" role="timer">
+    00<span class="colon">:</span>00<span class="colon">:</span>00
+  </div>
+  <div class="info-row" aria-live="polite" aria-atomic="true">
+    <span id="weekday">WED</span>
+    <span id="date">00 Jan</span>
+    <span class="ampm" id="ampm">AM</span>
+  </div>
+  <script>
+    const hourHand = document.getElementById("hour-hand");
+    const minuteHand = document.getElementById("minute-hand");
+    const secondHand = document.getElementById("second-hand");
+    const digitalClock = document.getElementById("digital-clock");
+    const numbersEl = document.getElementById("numbers");
+    const ticksEl = document.getElementById("ticks");
+    const weekday = document.getElementById("weekday"),
+      date = document.getElementById("date"),
+      ampm = document.getElementById("ampm");
+    const clockFace = document.getElementById("clock-face"),
+      glassReflect = document.getElementById("glass-reflect");
+    const weekDays = [
+      "SUN",
+      "MON",
+      "TUE",
+      "WED",
+      "THU",
+      "FRI",
+      "SAT"
+    ],
+      months = [
+        "JAN",
+        "FEB",
+        "MAR",
+        "APR",
+        "MAY",
+        "JUN",
+        "JUL",
+        "AUG",
+        "SEP",
+        "OCT",
+        "NOV",
+        "DEC"
+      ];
+    // Dynamically place numbers and ticks based on actual clock size
+    function placeClockNumbersAndTicks() {
+      numbersEl.innerHTML = "";
+      ticksEl.innerHTML = "";
+      const rect = clockFace.getBoundingClientRect();
+      const cx = rect.width / 2,
+        cy = rect.height / 2;
+      const numRadius = Math.min(cx, cy) * 0.80;
+      const tickRadius = Math.min(cx, cy) * 0.96;
+      // Place numbers
+      for (let i = 1; i <= 12; i++) {
+        const angle = ((i - 3) / 12) * 2 * Math.PI;
+        const x = cx + numRadius * Math.cos(angle) - 16.5;
+        const y = cy + numRadius * Math.sin(angle) - 16.5;
+        const el = document.createElement("div");
+        el.className = "number";
+        el.style.left = x + "px";
+        el.style.top = y + "px";
+        el.textContent = i;
+        numbersEl.appendChild(el);
+      }
+      // Place ticks
+      for (let i = 0; i < 60; i++) {
+        const tick = document.createElement("div");
+        tick.className = "tick" + (i % 5 === 0 ? " hour" : "");
+        tick.style.position = "absolute";
+        tick.style.left = "50%";
+        tick.style.top = "50%";
+        tick.style.transformOrigin = "50% 100%";
+        tick.style.transform = `rotate(${i * 6}deg) translateY(-${tickRadius}px)`;
+        ticksEl.appendChild(tick);
+      }
+    }
+    // Update glass reflection position based on pointer location
+    function setReflect(e) {
+      const br = clockFace.getBoundingClientRect();
+      const pointerX = e.touches ? e.touches[0].clientX : e.clientX;
+      const pointerY = e.touches ? e.touches[0].clientY : e.clientY;
+      let x = pointerX - br.left;
+      let y = pointerY - br.top;
+      x = Math.max(0, Math.min(x, br.width));
+      y = Math.max(0, Math.min(y, br.height));
+      glassReflect.style.setProperty("--x", (x / br.width) * 100 + "%");
+      glassReflect.style.setProperty("--y", (y / br.height) * 100 + "%");
+    }
+    clockFace.addEventListener("mousemove", setReflect);
+    clockFace.addEventListener("touchmove", setReflect);
+    function pad(n) {
+      return n < 10 ? "0" + n : n;
+    }
+    function updateClock() {
+      const now = new Date();
+      const ms = now.getMilliseconds();
+      const seconds = now.getSeconds() + ms / 1000;
+      const minutes = now.getMinutes() + seconds / 60;
+      const hours = now.getHours() + minutes / 60;
+      hourHand.style.transform = `rotate(${hours * 30}deg)`;
+      minuteHand.style.transform = `rotate(${minutes * 6}deg)`;
+      secondHand.style.transform = `rotate(${seconds * 6}deg)`;
+      const H = now.getHours();
+      const ampmStr = H < 12 ? "AM" : "PM";
+      const hr = H % 12 || 12;
+      const min = now.getMinutes();
+      const sec = now.getSeconds();
+      digitalClock.innerHTML = `${pad(hr)}<span class="colon">:</span>${pad(min)}<span class="colon">:</span>${pad(sec)}`;
+      weekday.textContent = weekDays[now.getDay()];
+      date.textContent = pad(now.getDate()) + " " + months[now.getMonth()];
+      ampm.textContent = ampmStr;
+      requestAnimationFrame(updateClock);
+    }
+    window.addEventListener("resize", placeClockNumbersAndTicks);
+    // Initialize the clock
+    placeClockNumbersAndTicks();
+    updateClock();
+  </script>
+</body>
+</html>
